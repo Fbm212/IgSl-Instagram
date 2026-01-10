@@ -5,64 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto-Resizing Iframe</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden; /* পুরো পেজে কোন স্ক্রলবার থাকবে না */
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden; /* শুধু হরিজন্টাল স্ক্রল বন্ধ */
+            background: white;
+        }
+        
+        #iframeContainer {
+            width: 100%;
+            min-height: 100vh;
+        }
+        
+        #autoResizeFrame {
+            width: 100%;
+            border: none;
+            display: block;
         }
     </style>
 </head>
 <body>
-    <!-- Iframe - কোন বর্ডার বা স্টাইল নেই -->
-    <iframe 
-        id="autoResizeFrame"
-        src="main-page.html" 
-        width="100%" 
-        height="100%" <!-- Temporary height -->
-        frameborder="0"
-        scrolling="no"
-        style="border: none; margin: 0; padding: 0; display: block;">
-    </iframe>
+    <div id="iframeContainer">
+        <iframe 
+            id="autoResizeFrame"
+            src="main-page.html" 
+            frameborder="0"
+            scrolling="no"
+            onload="resizeIframe()">
+        </iframe>
+    </div>
 
     <script>
-        // আইফ্রেম লোড হওয়ার পর তার সাইজ অটো-অ্যাডজাস্ট করার ফাংশন
+        // আইফ্রেম রিসাইজ করার ফাংশন
         function resizeIframe() {
             const iframe = document.getElementById('autoResizeFrame');
             
-            try {
-                // আইফ্রেমের ভিতরের ডকুমেন্টের উচ্চতা নিয়ে আসা
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                const iframeHeight = iframeDoc.body.scrollHeight;
-                
-                // আইফ্রেমের উচ্চতা সেট করা
-                iframe.style.height = iframeHeight + 'px';
-                
-                // ডিবাগ করার জন্য (কনসোলে দেখাবে)
-                console.log('Iframe height adjusted to:', iframeHeight, 'px');
-            } catch (error) {
-                // Cross-origin এরর হ্যান্ডলিং
-                console.log('Cannot access iframe content due to cross-origin restrictions.');
-                console.log('Using window message communication method...');
-            }
+            // প্রথমে একটি বেসিক হাইট সেট করুন
+            iframe.style.height = '100px';
+            
+            // কিছু সময় অপেক্ষা করে কনটেন্ট লোড হতে দিন
+            setTimeout(() => {
+                try {
+                    // আইফ্রেমের ভিতরের ডকুমেন্ট অ্যাক্সেস করার চেষ্টা
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    if (iframeDoc && iframeDoc.body) {
+                        // কনটেন্টের সঠিক উচ্চতা বের করা
+                        const height = Math.max(
+                            iframeDoc.body.scrollHeight,
+                            iframeDoc.body.offsetHeight,
+                            iframeDoc.documentElement.scrollHeight,
+                            iframeDoc.documentElement.offsetHeight,
+                            iframeDoc.documentElement.clientHeight
+                        );
+                        
+                        // আইফ্রেমের উচ্চতা সেট করা
+                        iframe.style.height = height + 'px';
+                        console.log('Iframe height set to:', height, 'px');
+                    }
+                } catch (error) {
+                    // Cross-origin এরর হলে বিকল্প পদ্ধতি
+                    handleCrossOriginResize(iframe);
+                }
+            }, 1000); // 1 সেকেন্ড অপেক্ষা
         }
-
-        // পেজ লোড হওয়ার পর এবং আইফ্রেম লোড হওয়ার পর ফাংশন কল করা
+        
+        // Cross-origin এরর হ্যান্ডলিং
+        function handleCrossOriginResize(iframe) {
+            console.log('Using interval method for cross-origin iframe');
+            
+            // প্রতি সেকেন্ডে চেক করবে
+            const checkInterval = setInterval(() => {
+                try {
+                    // আইফ্রেমের উইন্ডো থেকে উচ্চতা পাওয়ার চেষ্টা
+                    const height = iframe.contentWindow.document.body.scrollHeight;
+                    
+                    if (height > 100) { // ভ্যালিড হাইট পেলে
+                        iframe.style.height = height + 'px';
+                        console.log('Iframe height (cross-origin):', height, 'px');
+                        clearInterval(checkInterval); // ইন্টারভেল বন্ধ
+                    }
+                } catch (e) {
+                    // এরর ইগনোর করে চালিয়ে যাবে
+                }
+            }, 1500);
+            
+            // 10 সেকেন্ড পর ইন্টারভেল বন্ধ
+            setTimeout(() => clearInterval(checkInterval), 10000);
+        }
+        
+        // পেজ লোড হওয়ার পর কাজ শুরু
         window.onload = function() {
             const iframe = document.getElementById('autoResizeFrame');
             
+            // আইফ্রেম লোড ইভেন্ট
             iframe.onload = function() {
-                // কিছুটা দেরি করে কল করতে হবে যাতে কনটেন্ট সম্পূর্ণ লোড হয়
-                setTimeout(resizeIframe, 1000);
+                resizeIframe();
             };
             
-            // প্রথমবারের জন্য রিসাইজ কল
+            // রিসাইজ ইভেন্ট - উইন্ডো সাইজ পরিবর্তন হলে
+            window.addEventListener('resize', function() {
+                setTimeout(resizeIframe, 300);
+            });
+            
+            // প্রথমবার লোডের জন্য রিসাইজ কল
             setTimeout(resizeIframe, 2000);
         };
-
-        // উইন্ডো রিসাইজ হলে আইফ্রেমও রিসাইজ হবে
-        window.addEventListener('resize', function() {
-            setTimeout(resizeIframe, 500);
-        });
+        
+        // মাউস ওভার ইভেন্ট - স্ক্রল চেক করার জন্য
+        document.addEventListener('mouseenter', function(e) {
+            if (e.target.tagName === 'IFRAME') {
+                resizeIframe();
+            }
+        }, true);
     </script>
 </body>
 </html>
