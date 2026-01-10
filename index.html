@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-Resizing Iframe</title>
+    <title>Website Viewer</title>
     <style>
         * {
             margin: 0;
@@ -11,34 +11,42 @@
             box-sizing: border-box;
         }
         
-        body {
-            overflow-x: hidden; /* শুধু হরিজন্টাল স্ক্রল বন্ধ */
-            background: white;
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
         }
         
-        #iframeContainer {
+        iframe {
             width: 100%;
-            min-height: 100vh;
-        }
-        
-        #autoResizeFrame {
-            width: 100%;
+            height: 100%;
             border: none;
             display: block;
         }
     </style>
 </head>
 <body>
-    <div id="iframeContainer">
-        <iframe 
-            id="autoResizeFrame"
-            src="main-page.html" 
-            frameborder="0"
-            scrolling="no"
-            onload="resizeIframe()">
-        </iframe>
-    </div>
-
-   
+    <!-- এখানে YOUR_WEBSITE_URL এর জায়গায় আপনার ওয়েবসাইটের লিঙ্কটি দিন -->
+    <iframe 
+        src="main-page.html" 
+        sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"
+        allow="accelerometer; ambient-light-sensor; autoplay; battery; camera; clipboard-read; clipboard-write; display-capture; encrypted-media; fullscreen; gamepad; geolocation; gyroscope; magnetometer; microphone; midi; payment; picture-in-picture; screen-wake-lock; serial; speaker; usb; vr; xr-spatial-tracking"
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+    
+    <script>
+        // স্বয়ংক্রিয়ভাবে পূর্ণ স্ক্রীন মোডে যেতে (যদি প্রয়োজন হয়)
+        document.addEventListener('DOMContentLoaded', function() {
+            const iframe = document.querySelector('iframe');
+            
+            // রিলোড বাটনের জন্য শর্টকাট (F5 চাপলে)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F5') {
+                    e.preventDefault();
+                    iframe.src = iframe.src;
+                }
+            });
+        });
+    </script>
 </body>
 </html>
