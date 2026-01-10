@@ -3,12 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IgSl</title>
+    <title>Auto-Resizing Iframe</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* পুরো পেজে কোন স্ক্রলবার থাকবে না */
+        }
+    </style>
 </head>
 <body>
-    <!-- Simple Iframe -->
+    <!-- Iframe - কোন বর্ডার বা স্টাইল নেই -->
     <iframe 
+        id="autoResizeFrame"
         src="main-page.html" 
+        width="100%" 
+        height="1000px" <!-- Temporary height -->
+        frameborder="0"
+        scrolling="no"
+        style="border: none; margin: 0; padding: 0; display: block;">
     </iframe>
+
+    <script>
+        // আইফ্রেম লোড হওয়ার পর তার সাইজ অটো-অ্যাডজাস্ট করার ফাংশন
+        function resizeIframe() {
+            const iframe = document.getElementById('autoResizeFrame');
+            
+            try {
+                // আইফ্রেমের ভিতরের ডকুমেন্টের উচ্চতা নিয়ে আসা
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                const iframeHeight = iframeDoc.body.scrollHeight;
+                
+                // আইফ্রেমের উচ্চতা সেট করা
+                iframe.style.height = iframeHeight + 'px';
+                
+                // ডিবাগ করার জন্য (কনসোলে দেখাবে)
+                console.log('Iframe height adjusted to:', iframeHeight, 'px');
+            } catch (error) {
+                // Cross-origin এরর হ্যান্ডলিং
+                console.log('Cannot access iframe content due to cross-origin restrictions.');
+                console.log('Using window message communication method...');
+            }
+        }
+
+        // পেজ লোড হওয়ার পর এবং আইফ্রেম লোড হওয়ার পর ফাংশন কল করা
+        window.onload = function() {
+            const iframe = document.getElementById('autoResizeFrame');
+            
+            iframe.onload = function() {
+                // কিছুটা দেরি করে কল করতে হবে যাতে কনটেন্ট সম্পূর্ণ লোড হয়
+                setTimeout(resizeIframe, 1000);
+            };
+            
+            // প্রথমবারের জন্য রিসাইজ কল
+            setTimeout(resizeIframe, 2000);
+        };
+
+        // উইন্ডো রিসাইজ হলে আইফ্রেমও রিসাইজ হবে
+        window.addEventListener('resize', function() {
+            setTimeout(resizeIframe, 500);
+        });
+    </script>
 </body>
 </html>
