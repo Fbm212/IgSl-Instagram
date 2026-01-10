@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务暂时停止 - 时间</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft JhengHei', 'SimHei', 'STHeiti', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 900px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+        }
+        
+        .clock-icon {
+            font-size: 80px;
+            color: #6a11cb;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        h1 {
+            color: #2575fc;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .message {
+            font-size: 1.3rem;
+            color: #444;
+            margin-bottom: 25px;
+            padding: 0 10px;
+            transition: all 0.3s ease;
+            min-height: 120px;
+        }
+        
+        .highlight {
+            color: #ff7e5f;
+            font-weight: 700;
+        }
+        
+        /* বাবল ট্রান্সলেটর স্টাইল */
+        .bubble-translator {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        .bubble-main {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .bubble-main:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .bubble-main.active {
+            transform: rotate(45deg);
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+        }
+        
+        .language-options {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            width: 180px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            transform-origin: bottom right;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .language-options.show {
+            display: flex;
+        }
+        
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            background: white;
+            text-align: left;
+            font-size: 1rem;
+        }
+        
+        .lang-option:hover {
+            background: #f5f5f5;
+            transform: translateX(-5px);
+        }
+        
+        .lang-option.active {
+            background: #e8f5e9;
+            color: #4CAF50;
+            font-weight: 600;
+        }
+        
+        .lang-flag {
+            font-size: 1.2rem;
+        }
+        
+        /* বাটন কন্টেইনার - সমস্ত ডিভাইসে পাশাপাশি */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 40px;
+            flex-wrap: nowrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            flex: 1;
+            max-width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-height: 60px;
+        }
+        
+        .btn i {
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+        
+        .telegram-btn {
+            background: linear-gradient(to right, #0088cc, #34b7f1);
+            color: white;
+        }
+        
+        .telegram-btn:hover {
+            background: linear-gradient(to right, #0077b5, #2aa1d6);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 136, 204, 0.3);
+        }
+        
+        .thanks-btn {
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            color: white;
+        }
+        
+        .thanks-btn:hover {
+            background: linear-gradient(to right, #45a049, #7cb342);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .notification {
+            background-color: #f8f9fa;
+            border-left: 5px solid #2575fc;
+            padding: 20px;
+            margin: 35px 0 30px;
+            text-align: left;
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notification h3 {
+            color: #2575fc;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .notification h3 i {
+            margin-right: 10px;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            color: #666;
+            font-size: 1rem;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+        
+        /* বাংলা ফন্ট */
+        .bangla-font {
+            font-family: 'SolaimanLipi', 'Arial', sans-serif;
+        }
+        
+        /* চাইনিজ ফন্ট */
+        .chinese-font {
+            font-family: 'Microsoft JhengHei', 'SimHei', 'STHeiti', sans-serif;
+        }
+        
+        /* ইংরেজি ফন্ট */
+        .english-font {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        }
+        
+        /* রেস্পন্সিভ ডিজাইন */
+        @media (max-width: 768px) {
+            .container {
+                padding: 35px 25px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .message {
+                font-size: 1.1rem;
+                min-height: 150px;
+            }
+            
+            .button-container {
+                flex-direction: row;
+                gap: 15px;
+            }
+            
+            .btn {
+                padding: 16px 20px;
+                font-size: 1rem;
+                max-width: 100%;
+            }
+            
+            .clock-icon {
+                font-size: 70px;
+            }
+            
+            .bubble-translator {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .bubble-main {
+                width: 55px;
+                height: 55px;
+                font-size: 22px;
+            }
+            
+            .language-options {
+                width: 160px;
+                bottom: 65px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .button-container {
+                flex-direction: row;
+                gap: 12px;
+            }
+            
+            .btn {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+                min-height: 55px;
+            }
+            
+            .btn i {
+                margin-right: 8px;
+                font-size: 1.1rem;
+            }
+            
+            .clock-icon {
+                font-size: 60px;
+            }
+            
+            .message {
+                min-height: 180px;
+            }
+            
+            .bubble-translator {
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            .bubble-main {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .language-options {
+                width: 150px;
+                padding: 12px;
+            }
+            
+            .lang-option {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .button-container {
+                flex-direction: row;
+                gap: 10px;
+            }
+            
+            .btn {
+                padding: 12px 14px;
+                font-size: 0.9rem;
+                min-height: 50px;
+            }
+            
+            .btn span {
+                display: none;
+            }
+            
+            .btn i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            
+            .btn::after {
+                content: attr(data-short);
+                font-size: 0.8rem;
+            }
+            
+            .telegram-btn::after {
+                content: "Telegram";
+            }
+            
+            .thanks-btn::after {
+                content: "Thanks";
+            }
+            
+            .bubble-main {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
+            .language-options {
+                width: 140px;
+                bottom: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="clock-icon">
+            <i class="fas fa-clock"></i>
+        </div>
+        
+        <h1 id="main-title" class="chinese-font">服务暂时停止</h1>
+        
+        <div id="message-text" class="message chinese-font">
+            目前，我们的<span class="highlight">文件接收服务已暂停</span>。请稍后再试。
+            <br>当我们再次开始接收文件时，<span class="highlight">将会通知更新</span>。
+        </div>
+        
+        <div class="notification">
+            <h3><i class="fas fa-bell"></i> <span id="notification-title">重要信息</span></h3>
+            <p id="notification-text" class="chinese-font">加入我们的 Telegram 频道以获取新更新。当文件接收开始时，将首先在那里宣布。</p>
+        </div>
+        
+        <!-- বাটন কন্টেইনার - সব ডিভাইসে পাশাপাশি -->
+        <div class="button-container">
+            <a href="https://t.me/your_channel_link" target="_blank" class="btn telegram-btn" data-short="Telegram">
+                <i class="fab fa-telegram"></i>
+                <span id="telegram-btn-text">加入 Telegram 频道</span>
+            </a>
+            
+            <button onclick="closeWindow()" class="btn thanks-btn" data-short="Thanks">
+                <i class="fas fa-thumbs-up"></i>
+                <span id="thanks-btn-text">表示感谢</span>
+            </button>
+        </div>
+        
+        <div class="footer chinese-font">
+            <p id="footer-text">感谢您与我们在一起。我们将很快带着新的更新回来。</p>
+        </div>
+    </div>
+
+    <!-- বাবল ট্রান্সলেটর -->
+    <div class="bubble-translator">
+        <div class="bubble-main" id="bubble-main">
+            <i class="fas fa-language"></i>
+        </div>
+        <div class="language-options" id="language-options">
+            <button class="lang-option active" data-lang="zh">
+                <span class="lang-flag">🇨🇳</span>
+                <span class="lang-text">中文</span>
+            </button>
+            <button class="lang-option" data-lang="en">
+                <span class="lang-flag">🇺🇸</span>
+                <span class="lang-text">English</span>
+            </button>
+            <button class="lang-option" data-lang="bn">
+                <span class="lang-flag">🇧🇩</span>
+                <span class="lang-text">বাংলা</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ভাষা ডেটা অবজেক্ট
+        const translations = {
+            zh: {
+                title: "服务暂时停止",
+                message: "目前，我们的<span class='highlight'>文件接收服务已暂停</span>。请稍后再试。<br>当我们再次开始接收文件时，<span class='highlight'>将会通知更新</span>。",
+                notificationTitle: "重要信息",
+                notificationText: "加入我们的 Telegram 频道以获取新更新。当文件接收开始时，将首先在那里宣布。",
+                telegramBtn: "加入 Telegram 频道",
+                thanksBtn: "表示感谢",
+                footerText: "感谢您与我们在一起。我们将很快带着新的更新回来。",
+                closeAlert: "谢谢！此窗口现在将关闭。",
+                telegramAlert: "正在将您重定向到我们的 Telegram 群组..."
+            },
+            en: {
+                title: "Service Temporarily Unavailable",
+                message: "Currently, our <span class='highlight'>file acceptance is suspended</span>. Please try again later. <br>When we start accepting files again, <span class='highlight'>updates will be notified</span>.",
+                notificationTitle: "Important Information",
+                notificationText: "Join our Telegram channel to get new updates. When file acceptance starts, it will be announced there first.",
+                telegramBtn: "Join Telegram Channel",
+                thanksBtn: "Say Thanks",
+                footerText: "Thank you for staying with us. We'll be back soon with new updates.",
+                closeAlert: "Thank you! This window will now close.",
+                telegramAlert: "Redirecting you to our Telegram group..."
+            },
+            bn: {
+                title: "কাজ বন্ধ আছে আপাতত সময়",
+                message: "বর্তমানে আমাদের <span class='highlight'>ফাইল গ্রহণ বন্ধ</span> আছে। দয়া করে পরে আবার চেষ্টা করুন। <br>আবার যখন ফাইল নেওয়া শুরু হবে, <span class='highlight'>আপডেট জানানো হবে</span>।",
+                notificationTitle: "গুরুত্বপূর্ণ তথ্য",
+                notificationText: "নতুন আপডেট পেতে আমাদের টেলিগ্রাম চ্যানেলে জয়েন করুন। ফাইল নেওয়া শুরু হলে সবার আগে সেখানে জানানো হবে।",
+                telegramBtn: "আপদডেট চ্যানেল!",
+                thanksBtn: "ধন্যবাদ।",
+                footerText: "আমাদের সাথে থাকার জন্য ধন্যবাদ। খুব শীঘ্রই আবার ফিরে আসবো নতুন আপডেট নিয়ে।",
+                closeAlert: "আপনাকে ধন্যবাদ!",
+                telegramAlert: "আপনাকে আমাদের টেলিগ্রাম গ্রুপে রিডাইরেক্ট করা হচ্ছে..."
+            }
+        };
+
+        // ডিফল্ট ভাষা চাইনিজ
+        let currentLang = 'zh';
+
+        // বাবল ট্রান্সলেটর টগল ফাংশন
+        document.getElementById('bubble-main').addEventListener('click', function() {
+            const options = document.getElementById('language-options');
+            this.classList.toggle('active');
+            options.classList.toggle('show');
+        });
+
+        // বাবলের বাইরে ক্লিক করলে বন্ধ হওয়া
+        document.addEventListener('click', function(event) {
+            const bubble = document.getElementById('bubble-main');
+            const options = document.getElementById('language-options');
+            
+            if (!bubble.contains(event.target) && !options.contains(event.target)) {
+                bubble.classList.remove('active');
+                options.classList.remove('show');
+            }
+        });
+
+        // ভাষা পরিবর্তন ফাংশন
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // ভাষা অপশন একটিভ করা
+            document.querySelectorAll('.lang-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.lang === lang) {
+                    option.classList.add('active');
+                }
+            });
+            
+            // টেক্সট পরিবর্তন করা
+            document.getElementById('main-title').textContent = translations[lang].title;
+            document.getElementById('message-text').innerHTML = translations[lang].message;
+            document.getElementById('notification-title').textContent = translations[lang].notificationTitle;
+            document.getElementById('notification-text').textContent = translations[lang].notificationText;
+            document.getElementById('telegram-btn-text').textContent = translations[lang].telegramBtn;
+            document.getElementById('thanks-btn-text').textContent = translations[lang].thanksBtn;
+            document.getElementById('footer-text').textContent = translations[lang].footerText;
+            
+            // বাটনের সংক্ষিপ্ত টেক্সট পরিবর্তন করা
+            const telegramBtn = document.querySelector('.telegram-btn');
+            const thanksBtn = document.querySelector('.thanks-btn');
+            
+            if (lang === 'zh') {
+                telegramBtn.setAttribute('data-short', 'Telegram');
+                thanksBtn.setAttribute('data-short', '谢谢');
+            } else if (lang === 'en') {
+                telegramBtn.setAttribute('data-short', 'Telegram');
+                thanksBtn.setAttribute('data-short', 'Thanks');
+            } else if (lang === 'bn') {
+                telegramBtn.setAttribute('data-short', 'টেলিগ্রাম');
+                thanksBtn.setAttribute('data-short', 'ধন্যবাদ');
+            }
+            
+            // ফন্ট পরিবর্তন করা
+            const title = document.getElementById('main-title');
+            const message = document.getElementById('message-text');
+            const footer = document.getElementById('footer-text');
+            const notificationText = document.getElementById('notification-text');
+            
+            // সকল ফন্ট ক্লাস রিমুভ
+            title.classList.remove('bangla-font', 'chinese-font', 'english-font');
+            message.classList.remove('bangla-font', 'chinese-font', 'english-font');
+            footer.classList.remove('bangla-font', 'chinese-font', 'english-font');
+            notificationText.classList.remove('bangla-font', 'chinese-font', 'english-font');
+            
+            // নির্বাচিত ভাষা অনুযায়ী ফন্ট অ্যাড করা
+            if (lang === 'bn') {
+                title.classList.add('bangla-font');
+                message.classList.add('bangla-font');
+                footer.classList.add('bangla-font');
+                notificationText.classList.add('bangla-font');
+            } else if (lang === 'zh') {
+                title.classList.add('chinese-font');
+                message.classList.add('chinese-font');
+                footer.classList.add('chinese-font');
+                notificationText.classList.add('chinese-font');
+            } else if (lang === 'en') {
+                title.classList.add('english-font');
+                message.classList.add('english-font');
+                footer.classList.add('english-font');
+                notificationText.classList.add('english-font');
+            }
+            
+            // ভাষা অপশন বন্ধ করা
+            document.getElementById('bubble-main').classList.remove('active');
+            document.getElementById('language-options').classList.remove('show');
+        }
+
+        // ভাষা অপশনে ইভেন্ট লিসেনার যোগ করা
+        document.querySelectorAll('.lang-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const lang = this.dataset.lang;
+                changeLanguage(lang);
+                
+                // ভাষা পরিবর্তনের পর পেজটির শিরোনামও পরিবর্তন করা
+                document.title = translations[lang].title + " - 时间";
+            });
+        });
+
+        // উইন্ডোজ বন্ধ করার ফাংশন
+        function closeWindow() {
+            alert(translations[currentLang].closeAlert);
+            
+            // উইন্ডোজ/ট্যাব বন্ধ করা
+            window.close();
+        }
+
+        // টেলিগ্রাম বাটন ক্লিক করার সময়
+        document.querySelector('.telegram-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert(translations[currentLang].telegramAlert);
+            
+            // টেলিগ্রাম লিঙ্ক ওপেন করা
+            window.open('https://t.me/your_channel_link', '_blank');
+        });
+
+        // পেজ লোড হওয়ার পর চাইনিজ ভাষা সেট করা
+        document.addEventListener('DOMContentLoaded', function() {
+            changeLanguage('zh');
+        });
+    </script>
+</body>
+</html>
