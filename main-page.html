@@ -50,7 +50,7 @@
       box-shadow: var(--shadow);
       padding: 32px;
       display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 24px;
       backdrop-filter: blur(12px);
       position: relative;
@@ -188,37 +188,37 @@
       border-radius: 6px;
     }
 
-    .actions {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      padding: 0 16px;
+    /* Main Button Grids */
+    .button-grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
     }
 
-    .button {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      border: none;
-      color: white;
-      padding: 16px 28px;
-      border-radius: 16px;
+    .button-grid {
+      padding: 18px;
       font-weight: 700;
       letter-spacing: 0.5px;
       cursor: pointer;
-      min-width: 160px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
       transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
       position: relative;
       overflow: hidden;
       font-size: 15px;
+      border: none;
+      outline: none;
     }
 
-    .button::after {
+    .button-grid::after {
       content: '';
       position: absolute;
       top: 0;
@@ -229,45 +229,114 @@
       transition: left 0.6s ease;
     }
 
-    .button:hover {
+    .button-grid:hover {
       transform: translateY(-3px);
-      box-shadow: 0 15px 40px rgba(34, 197, 94, 0.4);
     }
 
-    .button:hover::after {
+    .button-grid:hover::after {
       left: 100%;
     }
 
-    .button:active {
+    .button-grid:active {
       transform: translateY(0);
     }
 
-    .button:disabled {
+    .button-grid:disabled {
       opacity: 0.6;
       cursor: not-allowed;
       transform: none !important;
     }
 
-    .button svg {
+    .button-grid svg {
       width: 20px;
       height: 20px;
       stroke: currentColor;
       stroke-width: 2.5;
     }
 
-    .button-secondary {
-      background: linear-gradient(135deg, #4b5563, #6b7280);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-      min-width: 140px;
-      padding: 14px 24px;
+    /* Convert Button */
+    .convert-button {
+      background: linear-gradient(135deg, var(--accent), #16a34a);
+      color: white;
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
     }
 
-    .helper {
-      font-size: 13px;
-      color: var(--muted);
-      text-align: center;
-      max-width: 200px;
-      line-height: 1.5;
+    .convert-button:hover {
+      box-shadow: 0 15px 40px rgba(34, 197, 94, 0.4);
+    }
+
+    .convert-button.loading {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .convert-button.loading::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: loading 1.5s infinite;
+    }
+
+    /* Push Button */
+    .push-button {
+      background: linear-gradient(135deg, var(--accent-2), #2563eb);
+      color: white;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+    }
+
+    .push-button:hover {
+      box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+    }
+
+    .push-button.loading {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .push-button.loading::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: loading 1.5s infinite;
+    }
+
+    /* View Output Button - ছোট সাইজ */
+    .view-output-button {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+      padding: 14px;
+      font-size: 14px;
+    }
+
+    .view-output-button:hover {
+      box-shadow: 0 15px 40px rgba(139, 92, 246, 0.4);
+    }
+
+    .view-output-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Clear Data Button - ছোট সাইজ */
+    .clear-button {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+      padding: 14px;
+      font-size: 14px;
+    }
+
+    .clear-button:hover {
+      box-shadow: 0 15px 40px rgba(239, 68, 68, 0.4);
     }
 
     .status-bar {
@@ -402,16 +471,144 @@
       transition: width 0.3s ease;
     }
 
-    .output-header {
+    /* Hidden Output Panel */
+    .hidden {
+      display: none;
+    }
+
+    /* Modal Styles - উন্নত */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: min(90%, 1000px);
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      box-shadow: var(--shadow);
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      background: rgba(11, 18, 32, 0.7);
     }
 
-    .output-actions {
+    .modal-header h3 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--text);
       display: flex;
+      align-items: center;
       gap: 10px;
+    }
+
+    .modal-close {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--error);
+      border-radius: 10px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(239, 68, 68, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .modal-body {
+      padding: 0;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-editor {
+      flex: 1;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      min-height: 400px;
+      max-height: 65vh;
+    }
+
+    .modal-line-numbers {
+      background: rgba(12, 19, 34, 0.9);
+      color: var(--muted);
+      padding: 16px 10px;
+      min-width: 56px;
+      text-align: right;
+      white-space: pre;
+      user-select: none;
+      font-family: 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+    }
+
+    .modal-textarea {
+      width: 100%;
+      min-height: 400px;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      padding: 16px;
+      font-size: 14px;
+      line-height: 1.6;
+      resize: none;
+      outline: none;
+      font-family: 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+      white-space: pre;
+      overflow: auto;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      background: rgba(11, 18, 32, 0.7);
     }
 
     .copy-button {
@@ -471,35 +668,60 @@
       stroke-width: 2.5;
     }
 
+    /* Loading animation */
+    @keyframes loading {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+
+    /* Secondary Button Grid Container - সব ডিভাইসে 2 কলাম */
+    .secondary-button-grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
     @media (max-width: 1100px) {
       .layout {
         grid-template-columns: 1fr;
         gap: 32px;
       }
 
-      .actions {
-        flex-direction: row;
-        justify-content: center;
-        flex-wrap: wrap;
-        padding: 20px;
-        background: rgba(11, 18, 32, 0.5);
-        border-radius: 16px;
+      /* Convert & Push বাটন সব ডিভাইসে পাশাপাশি */
+      .button-grid-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
       }
 
-      .button {
-        min-width: 140px;
+      .button-grid:first-child {
+        border-radius: 16px 0 0 16px;
       }
 
-      .helper {
-        max-width: 100%;
-        width: 100%;
-        order: 3;
+      .button-grid:last-child {
+        border-radius: 0 16px 16px 0;
+      }
+
+      /* View Output & Clear Data বাটন সব ডিভাইসে পাশাপাশি */
+      .secondary-button-grid-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
       }
     }
 
     @media (max-width: 768px) {
       body {
         padding: 16px;
+        min-height: auto;
       }
 
       .layout {
@@ -515,9 +737,14 @@
         min-height: 300px;
       }
 
-      .button {
-        min-width: 100%;
-        padding: 18px;
+      .button-grid {
+        padding: 14px;
+        font-size: 14px;
+      }
+
+      .button-grid svg {
+        width: 18px;
+        height: 18px;
       }
 
       .status-bar {
@@ -528,12 +755,44 @@
       .stats {
         justify-content: space-between;
       }
+
+      .modal {
+        width: 95%;
+        max-height: 90vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 12px;
+      }
+
+      .layout {
+        padding: 20px;
+        gap: 20px;
+      }
+
+      .button-grid {
+        padding: 12px;
+        font-size: 13px;
+      }
+
+      .button-grid svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* View Output & Clear Data বাটন আরও ছোট */
+      .view-output-button,
+      .clear-button {
+        padding: 12px;
+        font-size: 13px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <!-- ===== দ্বিতীয় প্রজেক্টের HTML স্ট্রাকচার ===== -->
   <div class="layout">
     <!-- Input Panel -->
     <div>
@@ -552,27 +811,24 @@
       </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="actions">
-      <button class="button" id="convert">
+    <!-- Convert & Push Buttons Grid -->
+    <div class="button-grid-container">
+      <button class="button-grid convert-button" id="convert">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
         </svg>
-        Convert →
+        Convert
       </button>
-      <button class="button button-secondary" id="push">
+      <button class="button-grid push-button" id="push">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
         </svg>
-        Push ↑
+        Push
       </button>
-      <div class="helper">
-        Click convert; invalid lines will be marked; extra field sits between "||" and "|"
-      </div>
     </div>
 
-    <!-- Output Panel -->
-    <div>
+    <!-- Hidden Output Panel -->
+    <div class="hidden">
       <div class="output-header">
         <div class="panel-title">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -597,6 +853,23 @@
       </div>
     </div>
 
+    <!-- View Output & Clear Data Buttons Grid -->
+    <div class="secondary-button-grid-container">
+      <button class="button-grid view-output-button" id="viewOutput" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        View Output
+      </button>
+      <button class="button-grid clear-button" id="clearData">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+        </svg>
+        Clear Data
+      </button>
+    </div>
+
     <!-- Status Bar -->
     <div class="status-bar">
       <div class="stats">
@@ -617,6 +890,40 @@
     </div>
   </div>
 
+  <!-- Output Modal -->
+  <div class="modal-overlay" id="outputModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+          </svg>
+          Converted Output
+        </h3>
+        <button class="modal-close" id="closeModal">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Close
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-editor">
+          <div class="modal-line-numbers" id="modalLines"></div>
+          <textarea class="modal-textarea" id="modalOutput" wrap="off" readonly></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="copy-button" id="copyModalOutput">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+          </svg>
+          Copy Output
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div class="toast" id="toast">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -625,8 +932,8 @@
     <span id="toastMessage">Copied to clipboard!</span>
   </div>
 
-  <!-- ===== প্রথম প্রজেক্টের জাভাস্ক্রিপ্ট লজিক ===== -->
   <script>
+    // DOM Elements
     const source = document.getElementById('source');
     const target = document.getElementById('target');
     const sourceLines = document.getElementById('sourceLines');
@@ -637,9 +944,17 @@
     const failCount = document.getElementById('failCount');
     const statusList = document.getElementById('statusList');
     const copyOutputBtn = document.getElementById('copyOutput');
+    const viewOutputBtn = document.getElementById('viewOutput');
+    const clearDataBtn = document.getElementById('clearData');
+    const outputModal = document.getElementById('outputModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const modalOutput = document.getElementById('modalOutput');
+    const modalLines = document.getElementById('modalLines');
+    const copyModalOutputBtn = document.getElementById('copyModalOutput');
     const toast = document.getElementById('toast');
     const toastMessage = document.getElementById('toastMessage');
 
+    // Update line numbers function
     function updateLineNumbers(textarea, gutter) {
       const lines = textarea.value.split(/\r?\n/).length || 1;
       gutter.innerHTML = '';
@@ -648,7 +963,6 @@
         lineNum.className = 'line-number';
         lineNum.textContent = i;
         
-        // লাইন স্ট্যাটাস ইন্ডিকেটর
         const status = document.createElement('div');
         status.className = 'line-status';
         lineNum.appendChild(status);
@@ -658,6 +972,18 @@
       gutter.scrollTop = textarea.scrollTop;
     }
 
+    // Update modal line numbers
+    function updateModalLineNumbers() {
+      const lines = modalOutput.value.split(/\r?\n/).length || 1;
+      let numbers = '';
+      for (let i = 1; i <= lines; i++) {
+        numbers += i + '\n';
+      }
+      modalLines.textContent = numbers;
+      modalLines.scrollTop = modalOutput.scrollTop;
+    }
+
+    // Toast notification
     function showToast(message, isError = false) {
       toastMessage.textContent = message;
       if (isError) {
@@ -671,14 +997,19 @@
       }, 3000);
     }
 
+    // Event listeners for line numbers
     source.addEventListener('input', () => updateLineNumbers(source, sourceLines));
-    target.addEventListener('input', () => updateLineNumbers(target, targetLines));
     source.addEventListener('scroll', () => { sourceLines.scrollTop = source.scrollTop; });
-    target.addEventListener('scroll', () => { targetLines.scrollTop = target.scrollTop; });
-    updateLineNumbers(source, sourceLines);
-    updateLineNumbers(target, targetLines);
+    
+    modalOutput.addEventListener('scroll', () => { 
+      modalLines.scrollTop = modalOutput.scrollTop; 
+    });
+    modalOutput.addEventListener('input', updateModalLineNumbers);
 
-    // লাইন নম্বরে ক্লিক করলে সেই লাইনে স্ক্রল করবে
+    // Initialize line numbers
+    updateLineNumbers(source, sourceLines);
+
+    // Click on line number to scroll
     sourceLines.addEventListener('click', (e) => {
       if (e.target.classList.contains('line-number')) {
         const lineNum = parseInt(e.target.textContent);
@@ -692,6 +1023,7 @@
       }
     });
 
+    // Copy output button
     copyOutputBtn.addEventListener('click', () => {
       if (!target.value.trim()) {
         showToast('No content to copy', true);
@@ -702,7 +1034,91 @@
         .catch(err => showToast('Copy failed: ' + err.message, true));
     });
 
-    // কনভার্ট লজিক (প্রথম প্রজেক্ট থেকে)
+    // Copy modal output button
+    copyModalOutputBtn.addEventListener('click', () => {
+      if (!modalOutput.value.trim()) {
+        showToast('No content to copy', true);
+        return;
+      }
+      navigator.clipboard.writeText(modalOutput.value)
+        .then(() => showToast('Copied to clipboard!'))
+        .catch(err => showToast('Copy failed: ' + err.message, true));
+    });
+
+    // View output button
+    viewOutputBtn.addEventListener('click', () => {
+      if (!viewOutputBtn.disabled) {
+        modalOutput.value = target.value;
+        updateModalLineNumbers();
+        outputModal.classList.add('active');
+        modalOutput.focus();
+      }
+    });
+
+    // Close modal
+    closeModalBtn.addEventListener('click', () => {
+      outputModal.classList.remove('active');
+    });
+
+    // Close modal with escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && outputModal.classList.contains('active')) {
+        outputModal.classList.remove('active');
+      }
+    });
+
+    // Close modal when clicking outside
+    outputModal.addEventListener('click', (e) => {
+      if (e.target === outputModal) {
+        outputModal.classList.remove('active');
+      }
+    });
+
+    // Clear all data button
+    clearDataBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear all data? This will reset input, output, and statistics.')) {
+        // Clear input
+        source.value = '';
+        updateLineNumbers(source, sourceLines);
+        
+        // Clear output
+        target.value = '';
+        
+        // Clear modal output if open
+        modalOutput.value = '';
+        updateModalLineNumbers();
+        
+        // Reset statistics
+        okCount.textContent = 'Success: 0';
+        failCount.textContent = 'Failed: 0';
+        
+        // Reset status list
+        statusList.innerHTML = `
+          <div class="status-item">
+            <span class="line">All</span>
+            <span>Awaiting conversion...</span>
+          </div>
+        `;
+        
+        // Reset push result
+        const pushResult = document.getElementById('pushResult');
+        pushResult.textContent = 'Not pushed';
+        pushResult.className = 'tag';
+        
+        // Disable view output button
+        viewOutputBtn.disabled = true;
+        
+        // Reset line status indicators
+        const lineNumbers = sourceLines.querySelectorAll('.line-status');
+        lineNumbers.forEach(el => {
+          el.className = 'line-status';
+        });
+        
+        showToast('All data cleared successfully');
+      }
+    });
+
+    // Conversion logic from first project
     function convertLines(raw) {
       const lines = raw.split(/\r?\n/).filter(line => line.trim().length > 0);
       const results = [];
@@ -710,7 +1126,7 @@
       let ok = 0;
       let fail = 0;
 
-      // লাইন স্ট্যাটাস রিসেট
+      // Reset line status
       const lineNumbers = sourceLines.querySelectorAll('.line-status');
       lineNumbers.forEach(el => {
         el.className = 'line-status';
@@ -730,7 +1146,7 @@
           cookie = pipeParts.slice(pipeParts.length >= 4 ? 3 : 2).join('|').trim();
         }
 
-        // লাইন স্ট্যাটাস আপডেট
+        // Update line status
         if (lineNumbers[idx]) {
           if (!user || !pass || !cookie || !cookie.includes('=')) {
             lineNumbers[idx].classList.add('invalid');
@@ -739,7 +1155,7 @@
           }
         }
 
-        // ভ্যালিডেশন
+        // Validation
         if (!user || !pass || !cookie) {
           status.push({ line: idx + 1, state: 'error', message: '验证失败' });
           fail += 1;
@@ -760,6 +1176,7 @@
       return { text: results.join('\n'), status, ok, fail };
     }
 
+    // Render status
     function renderStatus(status) {
       statusList.innerHTML = '';
       if (!status.length) {
@@ -787,40 +1204,60 @@
       }
     }
 
+    // Convert button click with loading animation
     convertBtn.addEventListener('click', () => {
-      const { text, status, ok, fail } = convertLines(source.value);
-      target.value = text;
-      okCount.textContent = `Success: ${ok}`;
-      failCount.textContent = `Failed: ${fail}`;
-      renderStatus(status);
-      updateLineNumbers(target, targetLines);
+      // Add loading class
+      convertBtn.classList.add('loading');
+      convertBtn.disabled = true;
       
-      if (ok > 0) {
-        showToast(`Converted ${ok} accounts successfully`);
-      }
+      // Simulate conversion time (minimum 500ms)
+      setTimeout(() => {
+        const { text, status, ok, fail } = convertLines(source.value);
+        target.value = text;
+        okCount.textContent = `Success: ${ok}`;
+        failCount.textContent = `Failed: ${fail}`;
+        renderStatus(status);
+        
+        // Enable view output button if there's content
+        if (text.trim()) {
+          viewOutputBtn.disabled = false;
+        } else {
+          viewOutputBtn.disabled = true;
+        }
+        
+        // Remove loading
+        convertBtn.classList.remove('loading');
+        convertBtn.disabled = false;
+        
+        if (ok > 0) {
+          showToast(`Converted ${ok} accounts successfully`);
+        } else if (fail > 0) {
+          showToast(`Conversion failed for ${fail} accounts`, true);
+        }
+      }, 500);
     });
 
-    // পুশ ফাংশন (প্রথম প্রজেক্ট থেকে)
+    // Build payload for push
     function buildPayload(text) {
       const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
       if (!lines.length) return '';
       return lines.map(line => `accounts=${btoa(line)}`).join('\n');
     }
 
+    // Push button click with loading animation
     pushBtn.addEventListener('click', async () => {
       const url = 'http://43.135.182.151/api/api/v1/webhook/IvJyNQONj-OSLMjRBGRUVSmvVaCoOeHdxRh6Pkcw7ew/account-push';
       const payload = buildPayload(target.value);
 
       if (!payload) {
         showPushResult('No data to push, convert first', true);
+        showToast('No data to push, convert first', true);
         return;
       }
       
-      // পুশ বাটন ডিজেবল করা
+      // Add loading class and disable button
+      pushBtn.classList.add('loading');
       pushBtn.disabled = true;
-      pushBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-      </svg> Pushing...`;
       
       showPushResult('Pushing...', false);
 
@@ -851,21 +1288,20 @@
         showPushResult(`Push error`, true);
         showToast(`Push error: ${err.message}`, true);
       } finally {
-        // বাটন এনাবল করা
+        // Remove loading and re-enable button
+        pushBtn.classList.remove('loading');
         pushBtn.disabled = false;
-        pushBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-        </svg> Push ↑`;
       }
     });
 
+    // Show push result
     function showPushResult(text, isError = false) {
       const el = document.getElementById('pushResult');
       el.textContent = text;
       el.className = `tag ${isError ? 'error' : 'success'}`;
     }
 
-    // শর্টকাট কী
+    // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         convertBtn.click();
@@ -874,8 +1310,8 @@
         e.preventDefault();
         pushBtn.click();
       }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'c' && target.value) {
-        copyOutputBtn.click();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'v' && !viewOutputBtn.disabled) {
+        viewOutputBtn.click();
       }
     });
   </script>
