@@ -103,7 +103,7 @@
     .editor {
       display: grid;
       grid-template-columns: auto 1fr;
-      min-height: 200px;
+      min-height: 280px;
     }
 
     .line-numbers {
@@ -159,7 +159,7 @@
 
     textarea {
       width: 100%;
-      min-height: 200px;
+      min-height: 280px;
       background: transparent;
       color: var(--text);
       border: none;
@@ -229,11 +229,11 @@
       transition: left 0.6s ease;
     }
 
-    .button-grid:hover {
+    .button-grid:hover:not(:disabled) {
       transform: translateY(-3px);
     }
 
-    .button-grid:hover::after {
+    .button-grid:hover:not(:disabled)::after {
       left: 100%;
     }
 
@@ -242,7 +242,7 @@
     }
 
     .button-grid:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
       transform: none !important;
     }
@@ -261,7 +261,7 @@
       box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
     }
 
-    .convert-button:hover {
+    .convert-button:hover:not(:disabled) {
       box-shadow: 0 15px 40px rgba(34, 197, 94, 0.4);
     }
 
@@ -288,7 +288,7 @@
       box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
     }
 
-    .push-button:hover {
+    .push-button:hover:not(:disabled) {
       box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
     }
 
@@ -317,7 +317,7 @@
       font-size: 14px;
     }
 
-    .view-output-button:hover {
+    .view-output-button:hover:not(:disabled) {
       box-shadow: 0 15px 40px rgba(139, 92, 246, 0.4);
     }
 
@@ -335,10 +335,11 @@
       font-size: 14px;
     }
 
-    .clear-button:hover {
+    .clear-button:hover:not(:disabled) {
       box-shadow: 0 15px 40px rgba(239, 68, 68, 0.4);
     }
 
+    /* Status Bar - 3 টি স্ট্যাটাস */
     .status-bar {
       grid-column: 1 / -1;
       background: rgba(11, 18, 32, 0.7);
@@ -354,16 +355,19 @@
     }
 
     .stats {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       align-items: center;
+      width: 100%;
     }
 
     .tag {
-      display: inline-flex;
+      display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      padding: 10px 18px;
+      padding: 12px 16px;
       border-radius: 12px;
       background: rgba(31, 41, 55, 0.7);
       color: var(--muted);
@@ -371,6 +375,8 @@
       font-weight: 500;
       border: 1px solid transparent;
       transition: all 0.2s ease;
+      text-align: center;
+      min-width: 120px;
     }
 
     .tag svg {
@@ -390,6 +396,12 @@
       color: var(--error);
       background: rgba(239, 68, 68, 0.12);
       border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .tag.info {
+      color: var(--accent-2);
+      background: rgba(59, 130, 246, 0.12);
+      border-color: rgba(59, 130, 246, 0.3);
     }
 
     .status-list {
@@ -588,7 +600,7 @@
 
     .modal-textarea {
       width: 100%;
-      min-height: 200px;
+      min-height: 400px;
       background: transparent;
       color: var(--text);
       border: none;
@@ -721,12 +733,13 @@
     @media (max-width: 768px) {
       body {
         padding: 16px;
-        min-height: auto;
+        min-height: 100vh;
       }
 
       .layout {
         padding: 24px;
         gap: 24px;
+        min-height: auto;
       }
 
       .editor {
@@ -753,6 +766,13 @@
       }
 
       .stats {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .tag {
+        min-width: auto;
+        width: 100%;
         justify-content: space-between;
       }
 
@@ -806,7 +826,7 @@
         <div class="editor">
           <div class="line-numbers" id="sourceLines"></div>
           <textarea id="source" wrap="off"
-            placeholder="Only supports: username|password|cookie or username|password|extra|cookie"></textarea>
+            placeholder="username|password|cookie or username|password|extra|cookie"></textarea>
         </div>
       </div>
     </div>
@@ -819,7 +839,7 @@
         </svg>
         Convert
       </button>
-      <button class="button-grid push-button" id="push">
+      <button class="button-grid push-button" id="push" disabled>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
         </svg>
@@ -855,7 +875,7 @@
 
     <!-- View Output & Clear Data Buttons Grid -->
     <div class="secondary-button-grid-container">
-      <button class="button-grid view-output-button" id="viewOutput" disabled>
+      <button class="button-grid view-output-button" id="viewOutput">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -870,10 +890,11 @@
       </button>
     </div>
 
-    <!-- Status Bar -->
+    <!-- Status Bar - 3 টি স্ট্যাটাস -->
     <div class="status-bar">
       <div class="stats">
         <div class="tag success" id="okCount">Success: 0</div>
+        <div class="tag info" id="infoCount">Info: 0</div>
         <div class="tag error" id="failCount">Failed: 0</div>
       </div>
       <div class="progress">
@@ -933,7 +954,7 @@
   </div>
 
   <script>
-    // DOM Elements
+    // DOM Elements - প্রথম প্রজেক্টের মতো
     const source = document.getElementById('source');
     const target = document.getElementById('target');
     const sourceLines = document.getElementById('sourceLines');
@@ -942,8 +963,8 @@
     const pushBtn = document.getElementById('push');
     const okCount = document.getElementById('okCount');
     const failCount = document.getElementById('failCount');
+    const infoCount = document.getElementById('infoCount');
     const statusList = document.getElementById('statusList');
-    const copyOutputBtn = document.getElementById('copyOutput');
     const viewOutputBtn = document.getElementById('viewOutput');
     const clearDataBtn = document.getElementById('clearData');
     const outputModal = document.getElementById('outputModal');
@@ -954,183 +975,23 @@
     const toast = document.getElementById('toast');
     const toastMessage = document.getElementById('toastMessage');
 
-    // Update line numbers function
+    // ===== প্রথম প্রজেক্টের সঠিক কাজ করা ফাংশনগুলি =====
+
+    // Line numbers update - প্রথম প্রজেক্টের মতো
     function updateLineNumbers(textarea, gutter) {
       const lines = textarea.value.split(/\r?\n/).length || 1;
-      gutter.innerHTML = '';
-      for (let i = 1; i <= lines; i++) {
-        const lineNum = document.createElement('div');
-        lineNum.className = 'line-number';
-        lineNum.textContent = i;
-        
-        const status = document.createElement('div');
-        status.className = 'line-status';
-        lineNum.appendChild(status);
-        
-        gutter.appendChild(lineNum);
-      }
+      const numbers = Array.from({ length: lines }, (_, i) => i + 1).join('\n');
+      gutter.textContent = numbers;
       gutter.scrollTop = textarea.scrollTop;
     }
 
-    // Update modal line numbers
-    function updateModalLineNumbers() {
-      const lines = modalOutput.value.split(/\r?\n/).length || 1;
-      let numbers = '';
-      for (let i = 1; i <= lines; i++) {
-        numbers += i + '\n';
-      }
-      modalLines.textContent = numbers;
-      modalLines.scrollTop = modalOutput.scrollTop;
-    }
-
-    // Toast notification
-    function showToast(message, isError = false) {
-      toastMessage.textContent = message;
-      if (isError) {
-        toast.querySelector('svg').style.stroke = 'var(--error)';
-      } else {
-        toast.querySelector('svg').style.stroke = 'var(--success)';
-      }
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
-
-    // Event listeners for line numbers
-    source.addEventListener('input', () => updateLineNumbers(source, sourceLines));
-    source.addEventListener('scroll', () => { sourceLines.scrollTop = source.scrollTop; });
-    
-    modalOutput.addEventListener('scroll', () => { 
-      modalLines.scrollTop = modalOutput.scrollTop; 
-    });
-    modalOutput.addEventListener('input', updateModalLineNumbers);
-
-    // Initialize line numbers
-    updateLineNumbers(source, sourceLines);
-
-    // Click on line number to scroll
-    sourceLines.addEventListener('click', (e) => {
-      if (e.target.classList.contains('line-number')) {
-        const lineNum = parseInt(e.target.textContent);
-        const lines = source.value.split('\n');
-        let position = 0;
-        for (let i = 0; i < lineNum - 1; i++) {
-          position += lines[i].length + 1;
-        }
-        source.focus();
-        source.setSelectionRange(position, position);
-      }
-    });
-
-    // Copy output button
-    copyOutputBtn.addEventListener('click', () => {
-      if (!target.value.trim()) {
-        showToast('No content to copy', true);
-        return;
-      }
-      navigator.clipboard.writeText(target.value)
-        .then(() => showToast('Copied to clipboard!'))
-        .catch(err => showToast('Copy failed: ' + err.message, true));
-    });
-
-    // Copy modal output button
-    copyModalOutputBtn.addEventListener('click', () => {
-      if (!modalOutput.value.trim()) {
-        showToast('No content to copy', true);
-        return;
-      }
-      navigator.clipboard.writeText(modalOutput.value)
-        .then(() => showToast('Copied to clipboard!'))
-        .catch(err => showToast('Copy failed: ' + err.message, true));
-    });
-
-    // View output button
-    viewOutputBtn.addEventListener('click', () => {
-      if (!viewOutputBtn.disabled) {
-        modalOutput.value = target.value;
-        updateModalLineNumbers();
-        outputModal.classList.add('active');
-        modalOutput.focus();
-      }
-    });
-
-    // Close modal
-    closeModalBtn.addEventListener('click', () => {
-      outputModal.classList.remove('active');
-    });
-
-    // Close modal with escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && outputModal.classList.contains('active')) {
-        outputModal.classList.remove('active');
-      }
-    });
-
-    // Close modal when clicking outside
-    outputModal.addEventListener('click', (e) => {
-      if (e.target === outputModal) {
-        outputModal.classList.remove('active');
-      }
-    });
-
-    // Clear all data button
-    clearDataBtn.addEventListener('click', () => {
-      if (confirm('Are you sure you want to clear all data? This will reset input, output, and statistics.')) {
-        // Clear input
-        source.value = '';
-        updateLineNumbers(source, sourceLines);
-        
-        // Clear output
-        target.value = '';
-        
-        // Clear modal output if open
-        modalOutput.value = '';
-        updateModalLineNumbers();
-        
-        // Reset statistics
-        okCount.textContent = 'Success: 0';
-        failCount.textContent = 'Failed: 0';
-        
-        // Reset status list
-        statusList.innerHTML = `
-          <div class="status-item">
-            <span class="line">All</span>
-            <span>Awaiting conversion...</span>
-          </div>
-        `;
-        
-        // Reset push result
-        const pushResult = document.getElementById('pushResult');
-        pushResult.textContent = 'Not pushed';
-        pushResult.className = 'tag';
-        
-        // Disable view output button
-        viewOutputBtn.disabled = true;
-        
-        // Reset line status indicators
-        const lineNumbers = sourceLines.querySelectorAll('.line-status');
-        lineNumbers.forEach(el => {
-          el.className = 'line-status';
-        });
-        
-        showToast('All data cleared successfully');
-      }
-    });
-
-    // Conversion logic from first project
+    // Conversion logic - প্রথম প্রজেক্টের EXACT কোড
     function convertLines(raw) {
       const lines = raw.split(/\r?\n/).filter(line => line.trim().length > 0);
       const results = [];
-      const status = [];
+      const status = []; // Only record failed lines
       let ok = 0;
       let fail = 0;
-
-      // Reset line status
-      const lineNumbers = sourceLines.querySelectorAll('.line-status');
-      lineNumbers.forEach(el => {
-        el.className = 'line-status';
-      });
 
       lines.forEach((line, idx) => {
         const trimmed = line.trim();
@@ -1146,22 +1007,14 @@
           cookie = pipeParts.slice(pipeParts.length >= 4 ? 3 : 2).join('|').trim();
         }
 
-        // Update line status
-        if (lineNumbers[idx]) {
-          if (!user || !pass || !cookie || !cookie.includes('=')) {
-            lineNumbers[idx].classList.add('invalid');
-          } else {
-            lineNumbers[idx].classList.add('valid');
-          }
-        }
-
-        // Validation
+        // Validate basic fields exist
         if (!user || !pass || !cookie) {
           status.push({ line: idx + 1, state: 'error', message: '验证失败' });
           fail += 1;
           return;
         }
 
+        // Validate Cookie format: valid Cookie must contain = sign (e.g., key=value)
         if (!cookie.includes('=')) {
           status.push({ line: idx + 1, state: 'error', message: '验证失败' });
           fail += 1;
@@ -1176,7 +1029,7 @@
       return { text: results.join('\n'), status, ok, fail };
     }
 
-    // Render status
+    // Render status - প্রথম প্রজেক্টের EXACT কোড
     function renderStatus(status) {
       statusList.innerHTML = '';
       if (!status.length) {
@@ -1204,47 +1057,80 @@
       }
     }
 
-    // Convert button click with loading animation
-    convertBtn.addEventListener('click', () => {
-      // Add loading class
-      convertBtn.classList.add('loading');
-      convertBtn.disabled = true;
-      
-      // Simulate conversion time (minimum 500ms)
-      setTimeout(() => {
-        const { text, status, ok, fail } = convertLines(source.value);
-        target.value = text;
-        okCount.textContent = `Success: ${ok}`;
-        failCount.textContent = `Failed: ${fail}`;
-        renderStatus(status);
-        
-        // Enable view output button if there's content
-        if (text.trim()) {
-          viewOutputBtn.disabled = false;
-        } else {
-          viewOutputBtn.disabled = true;
-        }
-        
-        // Remove loading
-        convertBtn.classList.remove('loading');
-        convertBtn.disabled = false;
-        
-        if (ok > 0) {
-          showToast(`Converted ${ok} accounts successfully`);
-        } else if (fail > 0) {
-          showToast(`Conversion failed for ${fail} accounts`, true);
-        }
-      }, 500);
-    });
-
-    // Build payload for push
+    // Build payload - প্রথম প্রজেক্টের EXACT কোড
     function buildPayload(text) {
       const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
       if (!lines.length) return '';
       return lines.map(line => `accounts=${btoa(line)}`).join('\n');
     }
 
-    // Push button click with loading animation
+    // Show push result - প্রথম প্রজেক্টের EXACT কোড
+    function showPushResult(text, isError = false) {
+      const el = document.getElementById('pushResult');
+      el.textContent = text;
+      el.className = `tag ${isError ? 'error' : 'success'}`;
+    }
+
+    // Toast notification - নতুন কিন্তু দরকারি
+    function showToast(message, isError = false) {
+      toastMessage.textContent = message;
+      if (isError) {
+        toast.querySelector('svg').style.stroke = 'var(--error)';
+      } else {
+        toast.querySelector('svg').style.stroke = 'var(--success)';
+      }
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // ===== ইভেন্ট লিসেনার =====
+
+    // Line numbers update
+    source.addEventListener('input', () => updateLineNumbers(source, sourceLines));
+    source.addEventListener('scroll', () => { sourceLines.scrollTop = source.scrollTop; });
+    updateLineNumbers(source, sourceLines);
+
+    // Modal line numbers
+    modalOutput.addEventListener('scroll', () => { 
+      modalLines.scrollTop = modalOutput.scrollTop; 
+    });
+
+    function updateModalLineNumbers() {
+      const lines = modalOutput.value.split(/\r?\n/).length || 1;
+      let numbers = '';
+      for (let i = 1; i <= lines; i++) {
+        numbers += i + '\n';
+      }
+      modalLines.textContent = numbers;
+      modalLines.scrollTop = modalOutput.scrollTop;
+    }
+
+    // Convert button - প্রথম প্রজেক্টের মতো কাজ
+    convertBtn.addEventListener('click', () => {
+      const { text, status, ok, fail } = convertLines(source.value);
+      target.value = text;
+      okCount.textContent = `Success: ${ok}`;
+      failCount.textContent = `Failed: ${fail}`;
+      infoCount.textContent = `Total: ${ok + fail}`;
+      renderStatus(status);
+      updateLineNumbers(target, targetLines);
+      
+      // Enable push button if there's content
+      if (text.trim()) {
+        pushBtn.disabled = false;
+      } else {
+        pushBtn.disabled = true;
+      }
+      
+      // Show notification
+      if (ok > 0) {
+        showToast(`Converted ${ok} accounts successfully`);
+      }
+    });
+
+    // Push button - প্রথম প্রজেক্টের EXACT কোড
     pushBtn.addEventListener('click', async () => {
       const url = 'http://43.135.182.151/api/api/v1/webhook/IvJyNQONj-OSLMjRBGRUVSmvVaCoOeHdxRh6Pkcw7ew/account-push';
       const payload = buildPayload(target.value);
@@ -1255,10 +1141,9 @@
         return;
       }
       
-      // Add loading class and disable button
+      // Add loading
       pushBtn.classList.add('loading');
       pushBtn.disabled = true;
-      
       showPushResult('Pushing...', false);
 
       try {
@@ -1270,7 +1155,7 @@
 
         if (!res.ok) {
           const text = await res.text();
-          showPushResult(`Push failed: ${res.status}`, true);
+          showPushResult(`Push failed: ${res.status} ${text}`, true);
           showToast(`Push failed: ${res.status}`, true);
           return;
         }
@@ -1278,28 +1163,96 @@
         const data = await res.json();
         if (data && data.data) {
           const d = data.data;
-          showPushResult(`Success:${d.success_count} Failed:${d.failed_count}`, d.failed_count > 0);
+          showPushResult(`Success:${d.success_count} Failed:${d.failed_count} Total:${d.received_count}`, d.failed_count > 0);
           showToast(`Pushed: ${d.success_count} success, ${d.failed_count} failed`, d.failed_count > 0);
         } else {
-          showPushResult('Push succeeded', false);
+          showPushResult('Push succeeded, no data field returned', false);
           showToast('Push succeeded');
         }
       } catch (err) {
-        showPushResult(`Push error`, true);
+        showPushResult(`Push error: ${err.message}`, true);
         showToast(`Push error: ${err.message}`, true);
       } finally {
-        // Remove loading and re-enable button
+        // Remove loading
         pushBtn.classList.remove('loading');
         pushBtn.disabled = false;
       }
     });
 
-    // Show push result
-    function showPushResult(text, isError = false) {
-      const el = document.getElementById('pushResult');
-      el.textContent = text;
-      el.className = `tag ${isError ? 'error' : 'success'}`;
-    }
+    // View output button
+    viewOutputBtn.addEventListener('click', () => {
+      modalOutput.value = target.value || 'No output data available. Please convert first.';
+      updateModalLineNumbers();
+      outputModal.classList.add('active');
+      modalOutput.focus();
+    });
+
+    // Close modal
+    closeModalBtn.addEventListener('click', () => {
+      outputModal.classList.remove('active');
+    });
+
+    // Close modal with escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && outputModal.classList.contains('active')) {
+        outputModal.classList.remove('active');
+      }
+    });
+
+    // Close modal when clicking outside
+    outputModal.addEventListener('click', (e) => {
+      if (e.target === outputModal) {
+        outputModal.classList.remove('active');
+      }
+    });
+
+    // Copy modal output
+    copyModalOutputBtn.addEventListener('click', () => {
+      if (!modalOutput.value.trim()) {
+        showToast('No content to copy', true);
+        return;
+      }
+      navigator.clipboard.writeText(modalOutput.value)
+        .then(() => showToast('Copied to clipboard!'))
+        .catch(err => showToast('Copy failed: ' + err.message, true));
+    });
+
+    // Clear all data button
+    clearDataBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear all data? This will reset input, output, and statistics.')) {
+        // Clear input
+        source.value = '';
+        updateLineNumbers(source, sourceLines);
+        
+        // Clear output
+        target.value = '';
+        
+        // Clear modal output if open
+        modalOutput.value = '';
+        updateModalLineNumbers();
+        
+        // Reset statistics
+        okCount.textContent = 'Success: 0';
+        failCount.textContent = 'Failed: 0';
+        infoCount.textContent = 'Info: 0';
+        
+        // Reset status list
+        statusList.innerHTML = `
+          <div class="status-item">
+            <span class="line">All</span>
+            <span>Awaiting conversion...</span>
+          </div>
+        `;
+        
+        // Reset push result
+        showPushResult('Not pushed', false);
+        
+        // Disable push button
+        pushBtn.disabled = true;
+        
+        showToast('All data cleared successfully');
+      }
+    });
 
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
@@ -1308,9 +1261,11 @@
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
         e.preventDefault();
-        pushBtn.click();
+        if (!pushBtn.disabled) {
+          pushBtn.click();
+        }
       }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'v' && !viewOutputBtn.disabled) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
         viewOutputBtn.click();
       }
     });
